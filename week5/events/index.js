@@ -2,17 +2,24 @@
   const $list = document.getElementById("list");
   const day = "20";
 
+  const fetchCategories = async () => {
+    let response = await fetch(
+      "https://www.pgm.gent/data/gentsefeesten/categories.json"
+    );
+    return await response.json();
+  };
+
+  const fetchEvents = async () => {
+    let response = await fetch(
+      "https://www.pgm.gent/data/gentsefeesten/events_500.json"
+    );
+    return await response.json();
+  };
+
   const fetchData = async () => {
     try {
-      let response = await fetch(
-        "https://www.pgm.gent/data/gentsefeesten/categories.json"
-      );
-      const categories = await response.json();
-
-      response = await fetch(
-        "https://www.pgm.gent/data/gentsefeesten/events_500.json"
-      );
-      const events = await response.json();
+      const categories = await fetchCategories();
+      const events = await fetchEvents();
 
       renderEvents(categories, events);
     } catch (error) {
@@ -30,17 +37,17 @@
         });
 
         return `
-      <h2 id="${category}">${category}</h2>
-      <ul>
-        ${filteredEvents
-          .map((event) => {
-            return `
-              <li>${event.title}</li>
-            `;
-          })
-          .join("")}
-      </ul>
-    `;
+          <h2 id="${category}">${category}</h2>
+          <ul>
+            ${filteredEvents
+              .map((event) => {
+                return `
+                  <li>${event.title}</li>
+                `;
+              })
+              .join("")}
+          </ul>
+        `;
       })
       .join("");
 

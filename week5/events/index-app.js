@@ -7,19 +7,24 @@
     cacheElements() {
       this.$list = document.getElementById("list");
     },
+    async fetchCategories() {
+      let response = await fetch(
+        "https://www.pgm.gent/data/gentsefeesten/categories.json"
+      );
+      return await response.json();
+    },
+    async fetchEvents() {
+      let response = await fetch(
+        "https://www.pgm.gent/data/gentsefeesten/events_500.json"
+      );
+      return await response.json();
+    },
     async fetchData() {
       try {
-        let response = await fetch(
-          "https://www.pgm.gent/data/gentsefeesten/categories.json"
-        );
-        const categories = await response.json();
+        const categories = await this.fetchCategories();
+        const events = await this.fetchEvents();
 
-        response = await fetch(
-          "https://www.pgm.gent/data/gentsefeesten/events_500.json"
-        );
-        const events = await response.json();
-
-        renderEvents(categories, events);
+        this.generateHTMLForEvents(categories, events);
       } catch (error) {
         // todo
       }
